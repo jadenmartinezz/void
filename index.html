@@ -5,159 +5,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Void</title>
 <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; overflow: hidden; }
-body {
-  background: #090909;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: 'DM Sans', sans-serif;
-}
-#setup {
-  width: 100%;
-  max-width: 420px;
-  padding: 0 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.setup-label {
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.58rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #252525;
-  text-align: center;
-}
-.setup-title {
-  font-size: 1.4rem;
-  font-weight: 300;
-  color: #333;
-  text-align: center;
-  letter-spacing: -0.3px;
-}
-.setup-sub {
-  font-size: 0.78rem;
-  font-weight: 300;
-  color: #1e1e1e;
-  text-align: center;
-  line-height: 1.6;
-}
-.setup-input {
-  background: #0f0f0f;
-  border: 1px solid #181818;
-  border-radius: 12px;
-  padding: 14px 18px;
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.75rem;
-  color: #444;
-  outline: none;
-  width: 100%;
-  letter-spacing: 0.5px;
-  transition: border-color 0.2s;
-}
+body { background: #090909; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; }
+#setup { width: 100%; max-width: 420px; padding: 0 32px; display: flex; flex-direction: column; gap: 20px; }
+.setup-label { font-family: 'Geist Mono', monospace; font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; color: #252525; text-align: center; }
+.setup-title { font-size: 1.4rem; font-weight: 300; color: #333; text-align: center; letter-spacing: -0.3px; }
+.setup-sub { font-size: 0.78rem; font-weight: 300; color: #1e1e1e; text-align: center; line-height: 1.6; }
+.setup-input { background: #0f0f0f; border: 1px solid #181818; border-radius: 12px; padding: 14px 18px; font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: #444; outline: none; width: 100%; letter-spacing: 0.5px; transition: border-color 0.2s; }
 .setup-input::placeholder { color: #1e1e1e; }
 .setup-input:focus { border-color: #222; }
-.setup-btn {
-  background: #111;
-  border: 1px solid #1a1a1a;
-  border-radius: 12px;
-  padding: 14px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 300;
-  color: #333;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.5px;
-}
+.setup-btn { background: #111; border: 1px solid #1a1a1a; border-radius: 12px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 300; color: #333; cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px; }
 .setup-btn:hover { border-color: #222; color: #444; }
-.setup-err {
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.62rem;
-  color: #2a1a1a;
-  text-align: center;
-  letter-spacing: 1px;
-  min-height: 16px;
-}
+.setup-err { font-family: 'Geist Mono', monospace; font-size: 0.62rem; color: #2a1a1a; text-align: center; letter-spacing: 1px; min-height: 16px; }
 #app { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center; }
-.datetime {
-  position: fixed;
-  top: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.6rem;
-  font-weight: 300;
-  letter-spacing: 3px;
-  color: #1c1c1c;
-  text-transform: uppercase;
-  white-space: nowrap;
-  pointer-events: none;
-  transition: color 0.4s;
-  z-index: 10;
-}
+.datetime { position: fixed; top: 28px; left: 50%; transform: translateX(-50%); font-family: 'Geist Mono', monospace; font-size: 0.6rem; font-weight: 300; letter-spacing: 3px; color: #1c1c1c; text-transform: uppercase; white-space: nowrap; pointer-events: none; transition: color 0.4s; z-index: 10; }
 .datetime.lit { color: #2e2e2e; }
-.thread {
-  position: fixed;
-  top: 0; bottom: 0; left: 0; right: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 110px;
-  pointer-events: none;
-  overflow: hidden;
-}
-.msgs {
-  width: 100%;
-  max-width: 480px;
-  padding: 0 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  max-height: calc(100vh - 180px);
-  pointer-events: all;
-}
+.sync-dot { position: fixed; top: 30px; right: 20px; width: 4px; height: 4px; border-radius: 50%; background: #1a1a1a; transition: background 0.4s; z-index: 10; }
+.sync-dot.syncing { background: #333; animation: pulse 1s ease-in-out infinite; }
+.sync-dot.ok { background: #1e3a1e; }
+.sync-dot.err { background: #3a1e1e; }
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+.thread { position: fixed; top: 0; bottom: 0; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 110px; pointer-events: none; overflow: hidden; }
+.msgs { width: 100%; max-width: 480px; padding: 0 28px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; scrollbar-width: none; max-height: calc(100vh - 180px); pointer-events: all; }
 .msgs::-webkit-scrollbar { display: none; }
 .msg { display: flex; flex-direction: column; animation: rise 0.2s ease; }
 @keyframes rise { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 .msg-u { align-items: flex-end; }
 .msg-a { align-items: flex-start; }
-.bub {
-  max-width: 80%;
-  padding: 10px 14px;
-  border-radius: 16px;
-  font-size: 0.85rem;
-  font-weight: 300;
-  line-height: 1.55;
-  color: #444;
-}
+.bub { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 0.85rem; font-weight: 300; line-height: 1.55; color: #444; }
 .msg-u .bub { background: #141414; border-bottom-right-radius: 4px; }
 .msg-a .bub { background: #0d0d0d; border-bottom-left-radius: 4px; border: 1px solid #131313; }
-.card {
-  width: 100%;
-  max-width: 380px;
-  background: #0d0d0d;
-  border: 1px solid #131313;
-  border-radius: 14px;
-  overflow: hidden;
-  font-size: 0.82rem;
-}
-.card-head {
-  padding: 10px 14px;
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.56rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #222;
-  border-bottom: 1px solid #111;
-}
+.card { width: 100%; max-width: 380px; background: #0d0d0d; border: 1px solid #131313; border-radius: 14px; overflow: hidden; font-size: 0.82rem; }
+.card-head { padding: 10px 14px; font-family: 'Geist Mono', monospace; font-size: 0.56rem; letter-spacing: 2px; text-transform: uppercase; color: #222; border-bottom: 1px solid #111; }
 .stat-row { display: grid; gap: 1px; background: #111; }
 .stat-cell { background: #0d0d0d; padding: 12px 10px; text-align: center; }
 .stat-n { font-family: 'Geist Mono', monospace; font-size: 1.5rem; font-weight: 400; letter-spacing: -1px; line-height: 1; color: #383838; }
@@ -167,77 +49,24 @@ body {
 .r-d { font-family: 'Geist Mono', monospace; font-size: 0.6rem; color: #202020; width: 52px; flex-shrink: 0; padding-top: 1px; }
 .r-m { flex: 1; color: #303030; font-size: 0.8rem; }
 .r-v { font-family: 'Geist Mono', monospace; font-size: 0.75rem; color: #2a2a2a; flex-shrink: 0; }
-.think {
-  background: #0d0d0d;
-  border: 1px solid #131313;
-  border-radius: 16px;
-  border-bottom-left-radius: 4px;
-  padding: 12px 16px;
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
+.think { background: #0d0d0d; border: 1px solid #131313; border-radius: 16px; border-bottom-left-radius: 4px; padding: 12px 16px; display: flex; gap: 4px; align-items: center; }
 .dot { width: 4px; height: 4px; background: #202020; border-radius: 50%; animation: bl 1.2s ease-in-out infinite; }
 .dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
 @keyframes bl{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
-.center {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  display: flex;
-  justify-content: center;
-  padding: 12px 24px 32px;
-}
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  .center { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
-}
-.shell {
-  width: 100%;
-  max-width: 480px;
-  background: #0f0f0f;
-  border: 1px solid #161616;
-  border-radius: 20px;
-  display: flex;
-  align-items: flex-end;
-  padding: 14px 14px 14px 20px;
-  gap: 12px;
-  transition: border-color 0.3s;
-}
+.center { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: center; padding: 12px 24px 32px; }
+@supports (padding-bottom: env(safe-area-inset-bottom)) { .center { padding-bottom: calc(24px + env(safe-area-inset-bottom)); } }
+.shell { width: 100%; max-width: 480px; background: #0f0f0f; border: 1px solid #161616; border-radius: 20px; display: flex; align-items: flex-end; padding: 14px 14px 14px 20px; gap: 12px; transition: border-color 0.3s; }
 .shell:focus-within { border-color: #1c1c1c; }
-textarea {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 300;
-  color: #555;
-  resize: none;
-  min-height: 24px;
-  max-height: 140px;
-  line-height: 1.55;
-  padding: 0;
-  caret-color: #333;
-}
+textarea { flex: 1; background: none; border: none; outline: none; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 300; color: #555; resize: none; min-height: 24px; max-height: 140px; line-height: 1.55; padding: 0; caret-color: #333; }
 textarea::placeholder { color: #181818; }
-.send {
-  width: 32px; height: 32px;
-  background: #141414;
-  border: 1px solid #1c1c1c;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.2s;
-  opacity: 0;
-  pointer-events: none;
-}
+.send { width: 32px; height: 32px; background: #141414; border: 1px solid #1c1c1c; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; opacity: 0; pointer-events: none; }
 .send.on { opacity: 1; pointer-events: all; }
 .send:hover { background: #1a1a1a; }
 .send svg { width: 13px; height: 13px; fill: #383838; }
 </style>
 </head>
 <body>
+
 <div id="setup">
   <div class="setup-label">void · first time setup</div>
   <div class="setup-title">Add your API key</div>
@@ -246,8 +75,10 @@ textarea::placeholder { color: #181818; }
   <button class="setup-btn" onclick="saveKey()">save and continue</button>
   <div class="setup-err" id="setup-err"></div>
 </div>
+
 <div id="app">
   <div class="datetime" id="dt"></div>
+  <div class="sync-dot" id="sync-dot"></div>
   <div class="thread"><div class="msgs" id="msgs"></div></div>
   <div class="center">
     <div class="shell">
@@ -258,43 +89,74 @@ textarea::placeholder { color: #181818; }
     </div>
   </div>
 </div>
+
 <script>
-let ANTHROPIC_KEY = localStorage.getItem('void_key') || '';
+const SUPABASE_URL='https://ntnwaxktvktdrzkosztb.supabase.co';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50bndheGt0dmt0ZHJ6a29zenRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4MjYwODgsImV4cCI6MjA4ODQwMjA4OH0.i8D_cjiYaxmPZOOYokU9wxuRKpwOVXxL0C6gCQT3Ygs';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
+let ANTHROPIC_KEY=localStorage.getItem('void_key')||'';
+
 function saveKey(){
-  const val = document.getElementById('key-input').value.trim();
-  if(!val.startsWith('sk-ant-')){
-    document.getElementById('setup-err').textContent = 'key should start with sk-ant-';
-    return;
-  }
-  localStorage.setItem('void_key', val);
-  ANTHROPIC_KEY = val;
+  const val=document.getElementById('key-input').value.trim();
+  if(!val.startsWith('sk-ant-')){document.getElementById('setup-err').textContent='key should start with sk-ant-';return;}
+  localStorage.setItem('void_key',val);
+  ANTHROPIC_KEY=val;
   startApp();
 }
-document.getElementById('key-input').addEventListener('keydown', e => {
-  if(e.key === 'Enter') saveKey();
-});
+document.getElementById('key-input').addEventListener('keydown',e=>{if(e.key==='Enter')saveKey();});
+
 function startApp(){
-  document.getElementById('setup').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  loadLocal();
-  tick();
-  setInterval(tick, 1000);
-  document.getElementById('inp').focus();
+  document.getElementById('setup').style.display='none';
+  document.getElementById('app').style.display='flex';
+  tick();setInterval(tick,1000);
+  dbLoad().then(()=>{document.getElementById('inp').focus();});
 }
-if(ANTHROPIC_KEY && !location.search.includes('reset')){ startApp(); }
+if(ANTHROPIC_KEY&&!location.search.includes('reset')){startApp();}
+
 const STORE='void_v1';
 let S={entries:[],rainDays:[],notes:[],crew:[],actions:[],projects:[],chatLog:[]};
-function loadLocal(){try{const s=localStorage.getItem(STORE);if(s)S={...S,...JSON.parse(s)};}catch(e){}}
 function saveLocal(){try{localStorage.setItem(STORE,JSON.stringify(S));}catch(e){}}
 const todayStr=()=>new Date().toISOString().split('T')[0];
 const nowT=()=>new Date().toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
 function uid(){return Date.now()+Math.random().toString(36).slice(2,5);}
+
+function syncDot(state){const d=document.getElementById('sync-dot');if(d)d.className='sync-dot'+(state?' '+state:'');}
+
+async function dbLoad(){
+  syncDot('syncing');
+  try{
+    const[e,r,n,c,a,p]=await Promise.all([
+      db.from('entries').select('*').order('date',{ascending:false}),
+      db.from('rain_days').select('*').order('date',{ascending:false}),
+      db.from('notes').select('*').order('date',{ascending:false}),
+      db.from('crew').select('*'),
+      db.from('actions').select('*').order('created_at',{ascending:false}),
+      db.from('projects').select('*'),
+    ]);
+    if(e.data)S.entries=e.data;
+    if(r.data)S.rainDays=r.data;
+    if(n.data)S.notes=n.data;
+    if(c.data)S.crew=c.data;
+    if(a.data)S.actions=a.data;
+    if(p.data)S.projects=p.data.map(x=>x.name);
+    syncDot('ok');
+  }catch(err){syncDot('err');console.warn('db load failed',err);}
+}
+
+async function dbInsert(table,row){
+  syncDot('syncing');
+  try{await db.from(table).upsert(row);syncDot('ok');}
+  catch(err){syncDot('err');console.warn('db save failed',err);}
+}
+
 function tick(){
   const now=new Date();
   const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
   const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  document.getElementById('dt').textContent=`${days[now.getDay()]} · ${months[now.getMonth()]} ${String(now.getDate()).padStart(2,'0')} · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const el=document.getElementById('dt');
+  if(el)el.textContent=`${days[now.getDay()]} · ${months[now.getMonth()]} ${String(now.getDate()).padStart(2,'0')} · ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 }
+
 function onInput(el){
   const has=el.value.trim().length>0;
   document.getElementById('sbtn').classList.toggle('on',has);
@@ -302,7 +164,8 @@ function onInput(el){
   el.style.height='auto';
   el.style.height=Math.min(el.scrollHeight,140)+'px';
 }
-function onKey(e){ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} }
+function onKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}}
+
 const msgs=document.getElementById('msgs');
 function addU(t){ap('msg-u',`<div class="bub">${esc(t)}</div>`);}
 function addThink(){const d=mk('msg-a');d.id='think';d.innerHTML=`<div class="think"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>`;msgs.appendChild(d);sc();}
@@ -313,6 +176,7 @@ function mk(c){const d=document.createElement('div');d.className='msg '+c;return
 function ap(c,html){const d=mk(c);d.innerHTML=html;msgs.appendChild(d);sc();}
 function sc(){setTimeout(()=>{msgs.scrollTop=msgs.scrollHeight;},60);}
 function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
 async function send(){
   const inp=document.getElementById('inp');
   const text=inp.value.trim();if(!text)return;
@@ -325,7 +189,7 @@ async function send(){
   try{
     const r=await callClaude(text);
     S.chatLog.push({role:'assistant',content:r.message,time:nowT()});
-    processData(r);
+    await processData(r);
     saveLocal();
     addA(r.message);
     if(r.card)addCard(r.card);
@@ -335,6 +199,7 @@ async function send(){
     console.error(err);
   }
 }
+
 async function callClaude(userMsg){
   const today=todayStr();
   const wkE=S.entries.filter(e=>{const d=new Date(e.date+'T12:00:00'),n=new Date(),ws=new Date(n);ws.setDate(n.getDate()-n.getDay()+1);return d>=ws;});
@@ -374,13 +239,16 @@ Voice: minimal, lowercase, no emoji, no filler.`;
   try{return JSON.parse(raw.replace(/```json|```/g,'').trim());}
   catch(e){return{message:raw,card:null,entries:[],rainDays:[],notes:[],crewUpdates:[],actions:[],projects:[]};}
 }
-function processData(r){
-  if(r.entries?.length){r.entries.forEach(e=>S.entries.unshift({...e,id:uid()}));S.entries.sort((a,b)=>(b.date||'').localeCompare(a.date||''));}
-  if(r.rainDays?.length){r.rainDays.forEach(rd=>S.rainDays.unshift({...rd,id:uid()}));S.rainDays.sort((a,b)=>(b.date||'').localeCompare(a.date||''));}
-  if(r.notes?.length){r.notes.forEach(n=>S.notes.unshift({...n,id:uid()}));}
-  if(r.crewUpdates?.length){r.crewUpdates.forEach(u=>{const m=S.crew.find(c=>c.name?.toLowerCase().includes(u.name.toLowerCase()));if(m&&u.action==='sick')m.sick_days=(m.sick_days||0)+1;});}
-  if(r.actions?.length){r.actions.forEach(a=>S.actions.unshift({...a,id:uid(),done:false}));}
-  if(r.projects?.length){r.projects.forEach(p=>{if(!S.projects.includes(p))S.projects.push(p);});}
+
+async function processData(r){
+  const saves=[];
+  if(r.entries?.length){r.entries.forEach(e=>{const row={id:uid(),...e};S.entries.unshift(row);saves.push(dbInsert('entries',row));});S.entries.sort((a,b)=>(b.date||'').localeCompare(a.date||''));}
+  if(r.rainDays?.length){r.rainDays.forEach(rd=>{const row={id:uid(),...rd};S.rainDays.unshift(row);saves.push(dbInsert('rain_days',row));});S.rainDays.sort((a,b)=>(b.date||'').localeCompare(a.date||''));}
+  if(r.notes?.length){r.notes.forEach(n=>{const row={id:uid(),...n};S.notes.unshift(row);saves.push(dbInsert('notes',row));});}
+  if(r.crewUpdates?.length){r.crewUpdates.forEach(u=>{const m=S.crew.find(c=>c.name?.toLowerCase().includes(u.name.toLowerCase()));if(m&&u.action==='sick'){m.sick_days=(m.sick_days||0)+1;saves.push(dbInsert('crew',m));}});}
+  if(r.actions?.length){r.actions.forEach(a=>{const row={id:uid(),...a,done:false,created_at:new Date().toISOString()};S.actions.unshift(row);saves.push(dbInsert('actions',row));});}
+  if(r.projects?.length){r.projects.forEach(p=>{if(!S.projects.includes(p)){S.projects.push(p);saves.push(dbInsert('projects',{id:uid(),name:p}));}});}
+  await Promise.allSettled(saves);
 }
 </script>
 </body>
