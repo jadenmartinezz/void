@@ -281,7 +281,7 @@ function startApp(){
   setInterval(tick, 1000);
   document.getElementById('inp').focus();
 }
-if(ANTHROPIC_KEY){ startApp(); }
+if(ANTHROPIC_KEY && !location.search.includes('reset')){ startApp(); }
 const STORE='void_v1';
 let S={entries:[],rainDays:[],notes:[],crew:[],actions:[],projects:[],chatLog:[]};
 function loadLocal(){try{const s=localStorage.getItem(STORE);if(s)S={...S,...JSON.parse(s)};}catch(e){}}
